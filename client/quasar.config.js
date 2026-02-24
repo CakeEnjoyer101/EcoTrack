@@ -63,7 +63,7 @@ export default defineConfig(() => {
       pwa: false,
     },
     pwa: {
-      workboxMode: 'GenerateSW', 
+      workboxMode: 'InjectManifest', 
       registerType: 'autoUpdate',
       manifest: {
         id: '/',
@@ -116,9 +116,8 @@ export default defineConfig(() => {
         ],
       },
       workboxOptions: {
-        cleanupOutdatedCaches: true,
-        skipWaiting: true,
-        clientsClaim: true,
+        swSrc: 'src-pwa/custom-service-worker.js',
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       },
     },
     cordova: {

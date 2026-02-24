@@ -131,10 +131,93 @@
               <template #body-cell-timestamp="props">
                 <q-td :props="props">{{ formatDate(props.row.timestamp) }}</q-td>
               </template>
+
+              <template #body-cell-actions="props">
+                <q-td :props="props" class="text-center">
+                  <q-btn
+                    dense
+                    flat
+                    round
+                    color="primary"
+                    icon="edit"
+                    @click="openEditDialog(props.row)"
+                  />
+                </q-td>
+              </template>
             </q-table>
           </q-card>
         </div>
       </div>
+
+      <q-dialog v-model="showEditDialog">
+        <q-card style="width: 640px; max-width: 90vw">
+          <q-card-section>
+            <div class="text-h6">Stimmungseintrag bearbeiten</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <div class="row q-col-gutter-md">
+              <div class="col-12">
+                <q-select
+                  v-model="editForm.mood"
+                  :options="moodOptions"
+                  emit-value
+                  map-options
+                  label="Stimmung"
+                  outlined
+                />
+              </div>
+
+              <div class="col-12 col-sm-6">
+                <q-input
+                  v-model.number="editForm.energy_level"
+                  type="number"
+                  min="1"
+                  max="10"
+                  label="Energie (1-10)"
+                  outlined
+                />
+              </div>
+
+              <div class="col-12 col-sm-6">
+                <q-input
+                  v-model.number="editForm.stress_level"
+                  type="number"
+                  min="1"
+                  max="10"
+                  label="Stress (1-10)"
+                  outlined
+                />
+              </div>
+
+              <div class="col-12">
+                <q-input v-model="editForm.notes" label="Notizen" outlined />
+              </div>
+
+              <div class="col-12 col-sm-6">
+                <q-input v-model="editForm.weather_conditions" label="Wetterbedingungen" outlined />
+              </div>
+
+              <div class="col-12 col-sm-6">
+                <q-input v-model="editForm.activity" label="Aktivitat" outlined />
+              </div>
+
+              <div class="col-12 col-sm-6">
+                <q-input v-model.number="editForm.latitude" type="number" label="Breitengrad (optional)" outlined />
+              </div>
+
+              <div class="col-12 col-sm-6">
+                <q-input v-model.number="editForm.longitude" type="number" label="Langengrad (optional)" outlined />
+              </div>
+            </div>
+          </q-card-section>
+
+          <q-card-actions align="right">
+            <q-btn flat label="Abbrechen" color="grey-8" v-close-popup />
+            <q-btn color="primary" label="Aktualisieren" :loading="saving" @click="updateMoodEntry" />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
 
       <q-dialog v-model="showWorkboxStatus">
         <q-card style="width: 500px; max-width: 85vw">
@@ -172,10 +255,12 @@ import { api } from 'boot/axios'
 const $q = useQuasar()
 
 const showWorkboxStatus = ref(false)
+const showEditDialog = ref(false)
 const workboxVersion = ref('6.5.4')
 const currentTime = ref('')
 const loading = ref(false)
 const saving = ref(false)
+const editingEntryId = ref(null)
 
 const moodEntries = ref([])
 const sensorReadings = ref([])
@@ -200,6 +285,7 @@ const createDefaultForm = () => ({
 })
 
 const moodForm = ref(createDefaultForm())
+const editForm = ref(createDefaultForm())
 
 const entryColumns = [
   { name: 'timestamp', label: 'Zeitpunkt', align: 'left', field: 'timestamp', sortable: true },
@@ -207,6 +293,7 @@ const entryColumns = [
   { name: 'energy_level', label: 'Energie', align: 'center', field: 'energy_level', sortable: true },
   { name: 'stress_level', label: 'Stress', align: 'center', field: 'stress_level', sortable: true },
   { name: 'notes', label: 'Notizen', align: 'left', field: 'notes' },
+  { name: 'actions', label: 'Aktionen', align: 'center', field: 'id' },
 ]
 
 const quickStats = computed(() => {
@@ -269,16 +356,46 @@ const formatDate = (value) => {
   })
 }
 
-const normalizeFormPayload = () => ({
-  mood: moodForm.value.mood,
-  energy_level: Number(moodForm.value.energy_level),
-  stress_level: Number(moodForm.value.stress_level),
-  notes: moodForm.value.notes || '',
-  weather_conditions: moodForm.value.weather_conditions || 'unknown',
-  activity: moodForm.value.activity || '',
-  latitude: moodForm.value.latitude === '' || moodForm.value.latitude === null ? null : Number(moodForm.value.latitude),
-  longitude: moodForm.value.longitude === '' || moodForm.value.longitude === null ? null : Number(moodForm.value.longitude),
+const normalizePayload = (formValue) => ({
+  mood: formValue.mood,
+  energy_level: Number(formValue.energy_level),
+  stress_level: Number(formValue.stress_level),
+  notes: formValue.notes || '',
+  weather_conditions: formValue.weather_conditions || 'unknown',
+  activity: formValue.activity || '',
+  latitude: formValue.latitude === '' || formValue.latitude === null ? null : Number(formValue.latitude),
+  longitude: formValue.longitude === '' || formValue.longitude === null ? null : Number(formValue.longitude),
 })
+
+const normalizeFormPayload = () => normalizePayload(moodForm.value)
+const normalizeEditPayload = () => normalizePayload(editForm.value)
+
+const isMoodPayloadValid = (payload) => payload.energy_level >= 1
+  && payload.energy_level <= 10
+  && payload.stress_level >= 1
+  && payload.stress_level <= 10
+
+const showRangeValidationError = () => {
+  $q.notify({
+    type: 'warning',
+    message: 'Energie und Stress mÃ¼ssen zwischen 1 und 10 liegen.',
+  })
+}
+
+const openEditDialog = (entry) => {
+  editingEntryId.value = entry.id
+  editForm.value = {
+    mood: entry.mood || 'neutral',
+    energy_level: Number(entry.energy_level ?? 5),
+    stress_level: Number(entry.stress_level ?? 5),
+    notes: entry.notes || '',
+    weather_conditions: entry.weather_conditions || 'unknown',
+    activity: entry.activity || '',
+    latitude: entry.latitude === undefined ? null : entry.latitude,
+    longitude: entry.longitude === undefined ? null : entry.longitude,
+  }
+  showEditDialog.value = true
+}
 
 const loadData = async () => {
   loading.value = true
@@ -323,6 +440,37 @@ const createMoodEntry = async () => {
     $q.notify({
       type: 'negative',
       message: `Speichern fehlgeschlagen: ${error.message}`,
+    })
+  } finally {
+    saving.value = false
+  }
+}
+
+const updateMoodEntry = async () => {
+  if (!editingEntryId.value) {
+    return
+  }
+
+  const payload = normalizeEditPayload()
+  if (!isMoodPayloadValid(payload)) {
+    showRangeValidationError()
+    return
+  }
+
+  saving.value = true
+  try {
+    await api.put(`/mood-entries/${editingEntryId.value}`, payload)
+    $q.notify({
+      type: 'positive',
+      message: 'Stimmungseintrag aktualisiert.',
+    })
+    showEditDialog.value = false
+    editingEntryId.value = null
+    await loadData()
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: `Aktualisieren fehlgeschlagen: ${error.message}`,
     })
   } finally {
     saving.value = false
