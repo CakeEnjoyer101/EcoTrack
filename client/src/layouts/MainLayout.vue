@@ -1,9 +1,7 @@
-<template>
+﻿<template>
   <q-layout view="lHh Lpr lFf">
-    <!-- Eigenes Header Design -->
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <!-- EcoTrack Logo/Title mit eigenem Logo -->
         <q-toolbar-title class="text-weight-bold row items-center">
           <q-avatar size="32px" class="q-mr-sm">
             <img src="/icons/EcoTrack-logo.png" alt="EcoTrack Logo" />
@@ -11,20 +9,18 @@
           EcoTrack
         </q-toolbar-title>
 
-        <!-- Mobile Menu Button -->
         <q-btn
           flat
           dense
           round
           icon="menu"
           aria-label="Menu"
-          @click="toggleLeftDrawer"
           class="q-mr-xs"
+          @click="toggleLeftDrawer"
         />
       </q-toolbar>
     </q-header>
 
-    <!-- Navigation Drawer -->
     <q-drawer
       v-model="leftDrawerOpen"
       side="left"
@@ -35,7 +31,6 @@
     >
       <q-scroll-area class="fit">
         <q-list padding class="text-primary">
-          <!-- App Info mit Logo -->
           <q-item class="q-mb-md">
             <q-item-section avatar>
               <q-avatar size="48px">
@@ -43,16 +38,13 @@
               </q-avatar>
             </q-item-section>
             <q-item-section>
-              <q-item-label class="text-h6 text-weight-bold" style="color: #26a69a"
-                >EcoTrack</q-item-label
-              >
-              <q-item-label caption>Umwelt & Gesundheits Monitor</q-item-label>
+              <q-item-label class="text-h6 text-weight-bold" style="color: #26a69a">EcoTrack</q-item-label>
+              <q-item-label caption>Umwelt & Gesundheitsmonitor</q-item-label>
             </q-item-section>
           </q-item>
 
           <q-separator class="q-mb-md" />
 
-          <!-- Navigation Links -->
           <q-item clickable v-ripple to="/" exact class="nav-item">
             <q-item-section avatar>
               <q-icon name="dashboard" color="primary" />
@@ -91,7 +83,6 @@
 
           <q-separator class="q-mt-md q-mb-md" />
 
-          <!-- Settings -->
           <q-item clickable v-ripple to="/settings" class="nav-item">
             <q-item-section avatar>
               <q-icon name="settings" color="primary" />
@@ -101,22 +92,18 @@
             </q-item-section>
           </q-item>
 
-          <!-- Impressum Button -->
-          <q-item clickable v-ripple class="nav-item q-mt-md" @click="showImpressum = true">
+          <q-item clickable v-ripple to="/impressum" class="nav-item q-mt-md">
             <q-item-section avatar>
               <q-icon name="info" color="primary" />
             </q-item-section>
             <q-item-section>
-              <router-link to="/impressum" class="nav-link">
-                <q-item-label>Impressum</q-item-label>
-              </router-link>
+              <q-item-label>Impressum</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
       </q-scroll-area>
     </q-drawer>
 
-    <!-- Main Content -->
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -127,7 +114,6 @@
 import { ref } from 'vue'
 
 const leftDrawerOpen = ref(false)
-const showImpressum = ref(false)
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
@@ -135,7 +121,6 @@ const toggleLeftDrawer = () => {
 </script>
 
 <style scoped>
-/* Custom Styles für EcoTrack */
 .q-header {
   box-shadow: 0 2px 12px rgba(38, 166, 154, 0.2);
   background: linear-gradient(135deg, #26a69a 0%, #00796b 100%);
@@ -166,7 +151,6 @@ const toggleLeftDrawer = () => {
   font-weight: 700;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .q-drawer {
     width: 240px !important;

@@ -12,6 +12,15 @@ export const createMoodEntry = asyncHandler(async (req, res) => {
   res.status(201).json(newEntry);
 });
 
+export const updateMoodEntry = asyncHandler(async (req, res) => {
+  const updatedEntry = await model.updateMoodEntry(req.params.id, req.body);
+  if (!updatedEntry) {
+    res.status(404).json({ message: 'Mood entry not found' });
+    return;
+  }
+  res.status(200).json(updatedEntry);
+});
+
 // Sensor Readings
 export const getAllSensorReadings = asyncHandler(async (req, res) => {
   const readings = await model.getAllSensorReadings();

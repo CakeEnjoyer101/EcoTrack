@@ -16,6 +16,12 @@ npm install
 quasar dev
 ```
 
+### Start in PWA mode (Service Worker + Install Prompt)
+
+```bash
+npm run dev:pwa
+```
+
 ### Lint the files
 
 ```bash
@@ -36,6 +42,12 @@ npm run format
 
 ```bash
 quasar build
+```
+
+### Build as PWA (for release/demo)
+
+```bash
+npm run build:pwa
 ```
 
 ### Customize the configuration

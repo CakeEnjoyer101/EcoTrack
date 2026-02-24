@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:3000/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,7 +9,8 @@ const api = axios.create({
 
 export const moodAPI = {
   getAll: () => api.get('/mood-entries'),
-  create: (moodData) => api.post('/mood-entries', moodData)
+  create: (moodData) => api.post('/mood-entries', moodData),
+  update: (id, moodData) => api.put(`/mood-entries/${id}`, moodData)
 }
 
 export const sensorAPI = {

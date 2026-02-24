@@ -1,1 +1,50 @@
-GET http://localhost:3000/test
+### Health
+GET http://localhost:3000/api/health
+
+### Mood - Read
+GET http://localhost:3000/api/mood-entries
+
+### Mood - Create
+POST http://localhost:3000/api/mood-entries
+Content-Type: application/json
+
+{
+  "mood": "gut",
+  "energy_level": 7,
+  "stress_level": 4,
+  "notes": "Eintrag aus REST Client",
+  "latitude": 48.208174,
+  "longitude": 16.373819,
+  "weather_conditions": "bewoelkt",
+  "activity": "lernen"
+}
+
+### Mood - Update (ID anpassen)
+PUT http://localhost:3000/api/mood-entries/1
+Content-Type: application/json
+
+{
+  "mood": "neutral",
+  "energy_level": 6,
+  "stress_level": 5,
+  "notes": "Update aus REST Client",
+  "latitude": 48.208174,
+  "longitude": 16.373819,
+  "weather_conditions": "sonnig",
+  "activity": "pause"
+}
+
+### Sensor - Read
+GET http://localhost:3000/api/sensor-readings
+
+### Sensor - Create
+POST http://localhost:3000/api/sensor-readings
+Content-Type: application/json
+
+{
+  "sensor_type": "gps",
+  "data": {
+    "latitude": 48.208174,
+    "longitude": 16.373819
+  }
+}

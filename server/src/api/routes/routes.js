@@ -11,6 +11,7 @@ router.get('/health', ecotrackController.getHealth);
 // Mood Entries
 router.get('/mood-entries', ecotrackController.getAllMoodEntries);
 router.post('/mood-entries', ecotrackController.createMoodEntry);
+router.put('/mood-entries/:id', ecotrackController.updateMoodEntry);
 
 // Sensor Readings
 router.get('/sensor-readings', ecotrackController.getAllSensorReadings);

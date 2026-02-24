@@ -30,6 +30,12 @@
             label="Stoppen"
             @click="stopLightSensor"
           />
+          <q-btn
+            color="secondary"
+            label="Licht speichern"
+            :disable="ambientLight === null"
+            @click="saveSensorReading('light', { illuminance: ambientLight })"
+          />
         </q-card-actions>
       </q-card>
 
@@ -216,8 +222,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useQuasar } from 'quasar'
+import { useEcoTrackStore } from 'src/stores/ecotrack-store'
 
 const $q = useQuasar()
+const store = useEcoTrackStore()
 
 // Refs für Sensoren
 const ambientLight = ref(null)
@@ -562,6 +570,21 @@ const stopVibration = () => {
   }
 }
 
+const saveSensorReading = async (sensorType, data) => {
+  try {
+    await store.createSensorReading({ sensor_type: sensorType, data })
+    $q.notify({
+      type: 'positive',
+      message: `Sensorwert (${sensorType}) gespeichert`
+    })
+  } catch {
+    $q.notify({
+      type: 'negative',
+      message: `Sensorwert (${sensorType}) konnte nicht gespeichert werden`
+    })
+  }
+}
+
 // ========== LIFECYCLE ==========
 const cleanupSensors = () => {
   stopLightSensor()
@@ -579,6 +602,10 @@ const cleanupSensors = () => {
 }
 
 onMounted(() => {
+  if (!store.initialized) {
+    store.loadFromLocalStorage()
+  }
+  store.fetchSensorReadings()
   initBatterySensor()
   initMotionSensor()
   initOrientationSensor()

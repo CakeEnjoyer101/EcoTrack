@@ -1,3 +1,4 @@
+/* eslint camelcase: off */
 import { query } from '../../boilerplate/db/index.js';
 
 // Mood Entries
@@ -24,6 +25,45 @@ export const createMoodEntry = async (moodData) => {
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
      RETURNING *`,
     [mood, energy_level, stress_level, notes, latitude, longitude, weather_conditions, activity],
+  );
+  return rows[0];
+};
+
+export const updateMoodEntry = async (id, moodData) => {
+  const {
+    mood,
+    energy_level,
+    stress_level,
+    notes,
+    latitude,
+    longitude,
+    weather_conditions,
+    activity,
+  } = moodData;
+
+  const { rows } = await query(
+    `UPDATE mood_entries
+     SET mood = $1,
+         energy_level = $2,
+         stress_level = $3,
+         notes = $4,
+         latitude = $5,
+         longitude = $6,
+         weather_conditions = $7,
+         activity = $8
+     WHERE id = $9
+     RETURNING *`,
+    [
+      mood,
+      energy_level,
+      stress_level,
+      notes,
+      latitude,
+      longitude,
+      weather_conditions,
+      activity,
+      id,
+    ],
   );
   return rows[0];
 };

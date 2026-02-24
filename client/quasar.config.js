@@ -11,9 +11,7 @@ export default defineConfig((/* ctx */) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: [
-      'axios' // Axios für API Calls hinzufügen
-    ],
+    boot: ['axios', 'pinia'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.scss'],
@@ -76,7 +74,7 @@ export default defineConfig((/* ctx */) => {
     devServer: {
       // https: true,
       open: true, // opens browser window automatically
-      port: 9000 // Explizit Port 9000 setzen
+      port: 9000,
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
@@ -92,12 +90,12 @@ export default defineConfig((/* ctx */) => {
           info: '#31CCEC',
           warning: '#F2C037',
         },
-        notify: {} // Notify Plugin konfigurieren
+        notify: {},
       },
 
       // Quasar plugins
-      plugins: ['Notify'], // Notify für Benachrichtigungen
-      lang: 'de' // Deutsche Sprache
+      plugins: ['Notify'],
+      lang: 'de',
     },
 
     // animations: 'all', // --- includes all animations
@@ -131,6 +129,62 @@ export default defineConfig((/* ctx */) => {
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
       workboxMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+      registerType: 'autoUpdate',
+      manifest: {
+        id: '/',
+        name: 'EcoTrack PWA',
+        short_name: 'EcoTrack',
+        description: 'Umwelt- und Gesundheitsmonitor als installierbare Progressive Web App',
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
+        orientation: 'portrait',
+        background_color: '#ffffff',
+        theme_color: '#26A69A',
+        lang: 'de',
+        icons: [
+          {
+            src: 'icons/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: 'icons/icon-256x256.png',
+            sizes: '256x256',
+            type: 'image/png',
+          },
+          {
+            src: 'icons/icon-384x384.png',
+            sizes: '384x384',
+            type: 'image/png',
+          },
+          {
+            src: 'icons/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+        ],
+        screenshots: [
+          {
+            src: 'screenshots/dashboard-wide.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'EcoTrack Desktop Dashboard',
+          },
+          {
+            src: 'screenshots/dashboard-mobile.png',
+            sizes: '720x1280',
+            type: 'image/png',
+            label: 'EcoTrack Mobile Ansicht',
+          },
+        ],
+      },
+      workboxOptions: {
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true,
+      },
       // swFilename: 'sw.js',
       // manifestFilename: 'manifest.json',
       // extendManifestJson (json) {},
@@ -145,7 +199,6 @@ export default defineConfig((/* ctx */) => {
     cordova: {
       // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
     },
-
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-capacitor-apps/configuring-capacitor
     capacitor: {
