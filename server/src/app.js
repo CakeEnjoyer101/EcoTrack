@@ -20,8 +20,6 @@ app.use(cors());
 
 app.use(express.static(path.join(dirname, '/public')));
 app.use(express.json());
-
-// NUR DIESE EINE ROUTE verwenden
 app.use('/api', testRoute);
 
 const PORT = process.env.PORT || 3000;

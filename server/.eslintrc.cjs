@@ -17,6 +17,9 @@ module.exports = {
     'no-plusplus': 0,
     'implicit-arrow-linebreak': 0,
     'function-paren-newline': 0,
+    camelcase: 0,
+    'import/prefer-default-export': 0,
+    'import/newline-after-import': 0,
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
 };

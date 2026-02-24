@@ -3,10 +3,10 @@
     <div class="q-pa-md">
       <h4 class="text-h4 q-mb-md">Umwelt- & Gesundheitsmonitor</h4>
 
-      <!-- Ambient Light Sensor -->
+      
       <q-card class="q-mb-md">
         <q-card-section>
-          <div class="text-h6">💡 Umgebungslicht</div>
+          <div class="text-h6">Umgebungslicht</div>
         </q-card-section>
         <q-card-section>
           <div v-if="ambientLight !== null" class="text-h4">
@@ -39,10 +39,10 @@
         </q-card-actions>
       </q-card>
 
-      <!-- Microphone -->
+      
       <q-card class="q-mb-md">
         <q-card-section>
-          <div class="text-h6">🔊 Umgebungslautstärke</div>
+          <div class="text-h6">Umgebungslautstärke</div>
         </q-card-section>
         <q-card-section>
           <div class="text-h4">
@@ -59,10 +59,10 @@
         </q-card-actions>
       </q-card>
 
-      <!-- GPS -->
+      
       <q-card class="q-mb-md">
         <q-card-section>
-          <div class="text-h6">📍 Standort & Höhe</div>
+          <div class="text-h6">Standort & Höhe</div>
         </q-card-section>
         <q-card-section>
           <div v-if="gpsData.latitude" class="text-body1">
@@ -84,10 +84,10 @@
         </q-card-actions>
       </q-card>
 
-      <!-- Battery -->
+      
       <q-card class="q-mb-md">
         <q-card-section>
-          <div class="text-h6">🔋 Akkustatus</div>
+          <div class="text-h6">Akkustatus</div>
         </q-card-section>
         <q-card-section>
           <div v-if="batteryData.level !== null" class="text-body1">
@@ -105,10 +105,10 @@
         </q-card-section>
       </q-card>
 
-      <!-- Motion Sensor -->
+      
       <q-card class="q-mb-md">
         <q-card-section>
-          <div class="text-h6">🔄 Bewegungssensor</div>
+          <div class="text-h6">Bewegungssensor</div>
         </q-card-section>
         <q-card-section>
           <div v-if="motionData.acceleration" class="text-body1">
@@ -122,10 +122,10 @@
         </q-card-section>
       </q-card>
 
-      <!-- Orientation Sensor -->
+      
       <q-card class="q-mb-md">
         <q-card-section>
-          <div class="text-h6">🧭 Orientierung</div>
+          <div class="text-h6">Orientierung</div>
         </q-card-section>
         <q-card-section>
           <div v-if="orientationData.alpha !== null" class="text-body1">
@@ -139,10 +139,10 @@
         </q-card-section>
       </q-card>
 
-      <!-- Vibration -->
+      
       <q-card class="q-mb-md">
         <q-card-section>
-          <div class="text-h6">📳 Vibration</div>
+          <div class="text-h6">Vibration</div>
         </q-card-section>
         <q-card-actions>
           <q-btn color="primary" label="Kurze Vibration" @click="vibrate(200)" />
@@ -151,10 +151,10 @@
         </q-card-actions>
       </q-card>
 
-      <!-- Sensor Status -->
+      
       <q-card class="q-mb-md">
         <q-card-section>
-          <div class="text-h6">📊 Sensor Status</div>
+          <div class="text-h6">Sensor-Status</div>
         </q-card-section>
         <q-card-section>
           <q-list dense>
@@ -226,14 +226,10 @@ import { useEcoTrackStore } from 'src/stores/ecotrack-store'
 
 const $q = useQuasar()
 const store = useEcoTrackStore()
-
-// Refs für Sensoren
 const ambientLight = ref(null)
 const noiseLevel = ref(null)
 const microphoneActive = ref(false)
 const lightSensor = ref(null)
-
-// GPS
 const gpsData = ref({
   latitude: null,
   longitude: null,
@@ -241,33 +237,23 @@ const gpsData = ref({
   accuracy: null
 })
 const gpsWatchId = ref(null)
-
-// Motion
 const motionData = ref({
   acceleration: null
 })
-
-// Orientation
 const orientationData = ref({
   alpha: null,
   beta: null,
   gamma: null
 })
-
-// Battery
 const batteryData = ref({
   level: null,
   charging: false
 })
-
-// Audio Variablen
 let audioContext = null
 let analyser = null
 let microphone = null
 let javascriptNode = null
 let mediaStream = null
-
-// ========== AMBIENT LIGHT SENSOR ==========
 const startLightSensor = () => {
   if ('AmbientLightSensor' in window) {
     try {
@@ -326,8 +312,6 @@ const getLightDescription = (lux) => {
   if (lux < 1000) return 'Hell'
   return 'Sehr hell'
 }
-
-// ========== MICROPHONE SENSOR ==========
 const toggleMicrophone = async () => {
   if (microphoneActive.value) {
     stopMicrophone()
@@ -363,7 +347,6 @@ const startMicrophone = async () => {
       analyser.getByteFrequencyData(array)
       const values = array.reduce((a, b) => a + b, 0)
       const average = values / array.length
-      // Konvertiere zu dB (approximativ)
       noiseLevel.value = Math.max(0, Math.floor(average * 0.5))
     }
 
@@ -413,15 +396,6 @@ const getNoiseDescription = (db) => {
   if (db < 80) return 'Laut'
   return 'Sehr laut'
 }
-
-// const getNoiseColor = (db) => {
-//   if (db === null) return 'grey'
-//   if (db < 40) return 'positive'
-//   if (db < 60) return 'warning'
-//   return 'negative'
-// }
-
-// ========== GPS SENSOR ==========
 const toggleGPS = () => {
   if (gpsWatchId.value) {
     stopGPS()
@@ -476,8 +450,6 @@ const stopGPS = () => {
     })
   }
 }
-
-// ========== BATTERY SENSOR ==========
 const initBatterySensor = () => {
   if ('getBattery' in navigator) {
     navigator.getBattery().then((battery) => {
@@ -511,8 +483,6 @@ const getBatteryColor = (level) => {
   if (level > 0.3) return 'warning'
   return 'negative'
 }
-
-// ========== MOTION SENSOR ==========
 const initMotionSensor = () => {
   if ('DeviceMotionEvent' in window) {
     window.addEventListener('devicemotion', handleMotion)
@@ -526,8 +496,6 @@ const handleMotion = (event) => {
     acceleration: event.acceleration
   }
 }
-
-// ========== ORIENTATION SENSOR ==========
 const initOrientationSensor = () => {
   if ('DeviceOrientationEvent' in window) {
     window.addEventListener('deviceorientation', handleOrientation)
@@ -543,8 +511,6 @@ const handleOrientation = (event) => {
     gamma: event.gamma
   }
 }
-
-// ========== VIBRATION SENSOR ==========
 const vibrate = (pattern) => {
   if ('vibrate' in navigator) {
     navigator.vibrate(pattern)
@@ -584,8 +550,6 @@ const saveSensorReading = async (sensorType, data) => {
     })
   }
 }
-
-// ========== LIFECYCLE ==========
 const cleanupSensors = () => {
   stopLightSensor()
   stopMicrophone()
@@ -631,3 +595,4 @@ onUnmounted(() => {
   font-weight: 600;
 }
 </style>
+

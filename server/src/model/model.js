@@ -1,7 +1,4 @@
-/* eslint camelcase: off */
 import { query } from '../../boilerplate/db/index.js';
-
-// Mood Entries
 export const getAllMoodEntries = async () => {
   const { rows } = await query('SELECT * FROM mood_entries ORDER BY timestamp DESC');
   return rows;
@@ -67,8 +64,6 @@ export const updateMoodEntry = async (id, moodData) => {
   );
   return rows[0];
 };
-
-// Sensor Readings
 export const getAllSensorReadings = async () => {
   const { rows } = await query('SELECT * FROM sensor_readings ORDER BY timestamp DESC');
   return rows;
@@ -83,8 +78,6 @@ export const createSensorReading = async (sensorData) => {
   );
   return rows[0];
 };
-
-// Health Check
 export const getDatabaseStatus = async () => {
   const { rows } = await query('SELECT NOW() as time');
   return rows[0];

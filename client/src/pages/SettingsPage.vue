@@ -82,3 +82,4 @@ const persist = () => {
   store.updateSettings(settings)
 }
 </script>
+

@@ -35,8 +35,6 @@ const routes = [
       },
     ],
   },
-
-  // Always leave this as last one
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
@@ -44,3 +42,4 @@ const routes = [
 ]
 
 export default routes
+

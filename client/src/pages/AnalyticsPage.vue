@@ -15,7 +15,7 @@
           </q-card-section>
           <q-card-section>
             <div class="text-body1 text-grey-7 text-center q-pa-xl">
-              🔍 Analytics Feature kommt bald...
+              ðŸ” Analytics Feature kommt bald...
               <br>
               <small>Hier werden Korrelationen zwischen Stimmung und Umweltdaten angezeigt</small>
             </div>
@@ -27,5 +27,4 @@
 </template>
 
 <script setup>
-// Analytics Page - Platzhalter
 </script>

@@ -23,3 +23,4 @@ export const healthAPI = {
 }
 
 export default api;
+

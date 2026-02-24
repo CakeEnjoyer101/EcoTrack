@@ -5,12 +5,12 @@
 
       <div class="impressum-content">
         <p class="impressum-line">Implementiert von Sven-Erik Reinhart</p>
-        <p class="impressum-line">© HTL Wien West, 2025</p>
+        <p class="impressum-line">Â© HTL Wien West, 2025</p>
       </div>
 
       <div class="navigation-buttons">
         <router-link to="/" class="btn-back">
-          ← Zurück zur Startseite
+          â† ZurÃ¼ck zur Startseite
         </router-link>
       </div>
     </div>
@@ -134,7 +134,7 @@ export default {
   transform: translateY(0);
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
   .impressum-container {
     padding: 2rem;

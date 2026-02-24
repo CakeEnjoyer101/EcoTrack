@@ -12,3 +12,4 @@ export default boot(({ app }) => {
 })
 
 export { api }
+

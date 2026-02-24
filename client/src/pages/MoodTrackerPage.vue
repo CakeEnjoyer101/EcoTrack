@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <q-page class="dashboard-page">
     <div class="q-pa-md">
       <div class="row items-center q-mb-lg">
@@ -385,3 +385,4 @@ onMounted(async () => {
   color: #1976d2 !important;
 }
 </style>
+

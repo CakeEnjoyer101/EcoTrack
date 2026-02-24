@@ -1,6 +1,6 @@
 <template>
   <q-page class="q-pa-md">
-    <!-- Welcome Header -->
+    
     <div class="row items-center q-mb-lg">
       <div class="col">
         <h1 class="text-h4 text-primary text-weight-bold q-mb-none">
@@ -17,13 +17,13 @@
       </div>
     </div>
 
-    <!-- Stats Cards -->
+    
     <div class="row q-col-gutter-md q-mb-lg">
       <div class="col-12 col-sm-6 col-md-3">
         <q-card class="bg-primary text-white">
           <q-card-section class="text-center">
             <div class="text-h5">{{ moodEntriesCount }}</div>
-            <div class="text-subtitle2">Stimmungseinträge</div>
+            <div class="text-subtitle2">StimmungseintrÃ¤ge</div>
           </q-card-section>
         </q-card>
       </div>
@@ -56,7 +56,7 @@
       </div>
     </div>
 
-    <!-- Quick Actions -->
+    
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-6">
         <q-card class="cursor-pointer" @click="$router.push('/mood-tracker')">
@@ -79,12 +79,12 @@
       </div>
     </div>
 
-    <!-- Recent Activity -->
+    
     <div class="row q-mt-lg">
       <div class="col-12">
         <q-card>
           <q-card-section>
-            <div class="text-h6">Letzte Aktivität</div>
+            <div class="text-h6">Letzte AktivitÃ¤t</div>
           </q-card-section>
           <q-card-section>
             <q-list separator>
@@ -96,7 +96,7 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ getMoodText(entry.mood) }}</q-item-label>
-                  <q-item-label caption>Energie: {{ entry.energy_level }}/10 • Stress: {{ entry.stress_level }}/10</q-item-label>
+                  <q-item-label caption>Energie: {{ entry.energy_level }}/10 â€¢ Stress: {{ entry.stress_level }}/10</q-item-label>
                 </q-item-section>
                 <q-item-section side>
                   <q-item-label caption>{{ formatDate(entry.timestamp) }}</q-item-label>
@@ -105,7 +105,7 @@
 
               <q-item v-if="recentEntries.length === 0">
                 <q-item-section class="text-center text-grey-7">
-                  Noch keine Aktivität
+                  Noch keine AktivitÃ¤t
                 </q-item-section>
               </q-item>
             </q-list>
@@ -163,13 +163,13 @@ const getMoodColor = (mood) => {
 
 const getMoodIcon = (mood) => {
   const icons = {
-    'sehr_gut': '😄',
-    'gut': '😊',
-    'neutral': '😐',
-    'schlecht': '😔',
-    'sehr_schlecht': '😢'
+    'sehr_gut': 'ðŸ˜„',
+    'gut': 'ðŸ˜Š',
+    'neutral': 'ðŸ˜',
+    'schlecht': 'ðŸ˜”',
+    'sehr_schlecht': 'ðŸ˜¢'
   }
-  return icons[mood] || '❓'
+  return icons[mood] || 'â“'
 }
 
 const getMoodText = (mood) => {
