@@ -5,23 +5,8 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('src/pages/MoodTrackerPage.vue'),
-        name: 'dashboard',
-      },
-      {
-        path: '/mood-tracker',
-        component: () => import('pages/MoodTrackerPage.vue'),
-        name: 'mood-tracker',
-      },
-      {
-        path: '/sensors',
-        component: () => import('pages/SensorsPage.vue'),
-        name: 'sensors',
-      },
-      {
-        path: '/analytics',
-        component: () => import('pages/AnalyticsPage.vue'),
-        name: 'analytics',
+        component: () => import('pages/IndexPage.vue'),
+        name: 'home',
       },
       {
         path: '/settings',

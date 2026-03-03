@@ -13,10 +13,9 @@ Content-Type: application/json
   "energy_level": 7,
   "stress_level": 4,
   "notes": "Eintrag aus REST Client",
-  "latitude": 48.208174,
-  "longitude": 16.373819,
-  "weather_conditions": "bewoelkt",
-  "activity": "lernen"
+  "noise_level_db": 56,
+  "light_level_lux": 412,
+  "camera_image_data_url": "data:image/jpeg;base64,PLACEHOLDER"
 }
 
 ### Mood - Update (ID anpassen)
@@ -28,11 +27,12 @@ Content-Type: application/json
   "energy_level": 6,
   "stress_level": 5,
   "notes": "Update aus REST Client",
-  "latitude": 48.208174,
-  "longitude": 16.373819,
-  "weather_conditions": "sonnig",
-  "activity": "pause"
+  "noise_level_db": 48,
+  "light_level_lux": 280
 }
+
+### Mood - Delete (ID anpassen)
+DELETE http://localhost:3000/api/mood-entries/1
 
 ### Sensor - Read
 GET http://localhost:3000/api/sensor-readings
@@ -42,9 +42,8 @@ POST http://localhost:3000/api/sensor-readings
 Content-Type: application/json
 
 {
-  "sensor_type": "gps",
+  "sensor_type": "microphone",
   "data": {
-    "latitude": 48.208174,
-    "longitude": 16.373819
+    "noise_level_db": 57
   }
 }

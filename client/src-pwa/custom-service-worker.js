@@ -12,9 +12,9 @@ import { ExpirationPlugin } from 'workbox-expiration'
 import { CacheableResponsePlugin } from 'workbox-cacheable-response'
 
 const CACHE_NAMES = {
-  staticAssets: 'ecotrack-static-assets-v1',
-  pages: 'ecotrack-pages-v1',
-  api: 'ecotrack-api-v1',
+  staticAssets: 'ecotrack-static-assets-v2',
+  pages: 'ecotrack-pages-v2',
+  api: 'ecotrack-api-v2',
 }
 
 self.skipWaiting()

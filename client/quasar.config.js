@@ -7,16 +7,17 @@ export default defineConfig(() => {
     css: ['app.scss'],
     extras: [
 
-      'roboto-font', 
-      'material-icons', 
+      'roboto-font',
+      'material-icons',
     ],
     build: {
       target: {
         browser: ['es2022', 'firefox115', 'chrome115', 'safari14'],
         node: 'node20',
       },
+      distDir: '../server/public',
 
-      vueRouterMode: 'hash', 
+      vueRouterMode: 'hash',
 
       vitePlugins: [
         [
@@ -32,8 +33,19 @@ export default defineConfig(() => {
       ],
     },
     devServer: {
-      open: true, 
+      open: true,
       port: 9000,
+      host: '0.0.0.0',
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+        '/uploads': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+      },
     },
     framework: {
       config: {
@@ -54,16 +66,16 @@ export default defineConfig(() => {
     },
     animations: [],
     ssr: {
-      prodPort: 3000, 
+      prodPort: 3000,
 
       middlewares: [
-        'render', 
+        'render',
       ],
 
       pwa: false,
     },
     pwa: {
-      workboxMode: 'InjectManifest', 
+      workboxMode: 'InjectManifest',
       registerType: 'autoUpdate',
       manifest: {
         id: '/',
@@ -129,7 +141,7 @@ export default defineConfig(() => {
       preloadScripts: ['electron-preload'],
       inspectPort: 5858,
 
-      bundler: 'packager', 
+      bundler: 'packager',
 
       packager: {
       },
@@ -141,9 +153,8 @@ export default defineConfig(() => {
     },
     bex: {
 
-      
+
       extraScripts: [],
     },
   }
 })
-

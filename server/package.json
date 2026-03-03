@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "set MODE=development && nodemon src/app.js",
     "start": "set MODE=production && set DEBUG=startup && node src/app.js",
-    "lint": "eslint . --ext .js"
+    "build:client": "npm --prefix ../client run build:pwa",
+    "start:full": "npm run build:client && npm run start",
+    "lint": "eslint src --ext .js"
   },
   "keywords": [
     "express",

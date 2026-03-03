@@ -14,7 +14,7 @@
           dense
           round
           icon="menu"
-          aria-label="Menu"
+          aria-label="Menue"
           class="q-mr-xs"
           @click="toggleLeftDrawer"
         />
@@ -39,7 +39,7 @@
             </q-item-section>
             <q-item-section>
               <q-item-label class="text-h6 text-weight-bold" style="color: #26a69a">EcoTrack</q-item-label>
-              <q-item-label caption>Umwelt & Gesundheitsmonitor</q-item-label>
+              <q-item-label caption>Stimmung und Sensoren</q-item-label>
             </q-item-section>
           </q-item>
 
@@ -47,37 +47,10 @@
 
           <q-item clickable v-ripple to="/" exact class="nav-item">
             <q-item-section avatar>
-              <q-icon name="dashboard" color="primary" />
+              <q-icon name="home" color="primary" />
             </q-item-section>
             <q-item-section>
-              <q-item-label>Dashboard</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple to="/mood-tracker" class="nav-item">
-            <q-item-section avatar>
-              <q-icon name="mood" color="primary" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Stimmung</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple to="/sensors" class="nav-item">
-            <q-item-section avatar>
-              <q-icon name="sensors" color="primary" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Sensoren</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple to="/analytics" class="nav-item">
-            <q-item-section avatar>
-              <q-icon name="analytics" color="primary" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Analysen</q-item-label>
+              <q-item-label>Startseite</q-item-label>
             </q-item-section>
           </q-item>
 
