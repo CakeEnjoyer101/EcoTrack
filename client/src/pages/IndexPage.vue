@@ -5,10 +5,18 @@
         <h1 class="text-h4 text-primary text-weight-bold q-mb-xs">Stimmungseintrag</h1>
         <p class="text-subtitle1 text-grey-7 q-mb-none">Stimmung, Foto und Sensorwerte als Datensatz speichern</p>
       </div>
-      <div class="col-auto">
-        <q-btn flat round icon="refresh" color="primary" :loading="loading" @click="loadData" />
+      <div class="col-auto action-with-tooltip">
+        <q-btn flat round icon="refresh" color="primary" :loading="loading" :disable="isOffline" @click="loadData" />
+        <q-tooltip>{{ isOffline ? offlineActionHint : 'Daten neu laden' }}</q-tooltip>
       </div>
     </div>
+
+    <q-banner v-if="isOffline" rounded class="offline-banner q-mb-md">
+      <template #avatar>
+        <q-icon name="cloud_off" color="warning" />
+      </template>
+      Offline-Modus aktiv. Speichern, Loeschen und Synchronisieren sind derzeit deaktiviert.
+    </q-banner>
 
     <q-card class="capture-card q-mb-lg">
       <q-card-section>
@@ -173,9 +181,10 @@
 
       <q-card-actions align="right">
         <q-btn flat color="grey-8" label="Zuruecksetzen" @click="resetFormAndSensors" />
-        <q-btn color="primary" icon="save" round :loading="saving" @click="saveDataset">
-          <q-tooltip>Datensatz speichern</q-tooltip>
-        </q-btn>
+        <div class="action-with-tooltip">
+          <q-btn color="primary" icon="save" round :loading="saving" :disable="isOffline" @click="saveDataset" />
+          <q-tooltip>{{ isOffline ? offlineActionHint : 'Datensatz speichern' }}</q-tooltip>
+        </div>
       </q-card-actions>
     </q-card>
 
@@ -309,15 +318,17 @@
                       </q-btn>
                     </div>
                     <div class="col-6 text-center">
-                      <q-btn
-                        flat
-                        color="negative"
-                        icon="delete"
-                        round
-                        @click="deleteEntry(entry)"
-                      >
-                        <q-tooltip>Loeschen</q-tooltip>
-                      </q-btn>
+                      <div class="action-with-tooltip">
+                        <q-btn
+                          flat
+                          color="negative"
+                          icon="delete"
+                          round
+                          :disable="isOffline"
+                          @click="deleteEntry(entry)"
+                        />
+                        <q-tooltip>{{ isOffline ? offlineActionHint : 'Loeschen' }}</q-tooltip>
+                      </div>
                     </div>
                   </div>
                 </q-card-section>
@@ -495,14 +506,18 @@
         <q-separator />
         <q-card-actions class="edit-dialog-actions">
           <q-btn flat color="grey-8" label="Abbrechen" v-close-popup />
-          <q-btn
-            unelevated
-            color="primary"
-            icon="save"
-            label="Aenderungen speichern"
-            :loading="editSaving"
-            @click="saveEditEntry"
-          />
+          <div class="action-with-tooltip">
+            <q-btn
+              unelevated
+              color="primary"
+              icon="save"
+              label="Aenderungen speichern"
+              :loading="editSaving"
+              :disable="isOffline"
+              @click="saveEditEntry"
+            />
+            <q-tooltip>{{ isOffline ? offlineActionHint : 'Aenderungen speichern' }}</q-tooltip>
+          </div>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -566,6 +581,8 @@ const editSaving = ref(false)
 const editDialogOpen = ref(false)
 const editForm = ref(createDefaultEditForm())
 const manualLightValue = ref(null)
+const isOffline = ref(typeof navigator !== 'undefined' ? !navigator.onLine : false)
+const offlineActionHint = 'Offline: Diese Aktion ist nur mit Internetverbindung verfuegbar.'
 
 const imageDialogOpen = ref(false)
 const imageDialogSource = ref('')
@@ -636,6 +653,24 @@ const getRequestErrorText = (error) => {
 
   return status ? `${message} (HTTP ${status})` : message
 }
+
+const handleOfflineStateChange = (nextOffline) => {
+  const changed = isOffline.value !== nextOffline
+  isOffline.value = nextOffline
+  if (!changed) {
+    return
+  }
+
+  $q.notify({
+    type: nextOffline ? 'warning' : 'positive',
+    message: nextOffline
+      ? 'Keine Internetverbindung. Online-Aktionen wurden deaktiviert.'
+      : 'Internetverbindung wiederhergestellt. Online-Aktionen sind wieder verfuegbar.',
+  })
+}
+
+const handleOnline = () => handleOfflineStateChange(false)
+const handleOffline = () => handleOfflineStateChange(true)
 
 const openImagePreview = (entry) => {
   const imageSrc = getEntryImageSrc(entry)
@@ -812,6 +847,10 @@ const summarizeSensorReading = (row) => {
 }
 
 const loadData = async () => {
+  if (isOffline.value) {
+    return
+  }
+
   loading.value = true
   try {
     const [moodResponse, sensorResponse] = await Promise.all([
@@ -1114,6 +1153,14 @@ const buildEditPayload = () => ({
 })
 
 const saveEditEntry = async () => {
+  if (isOffline.value) {
+    $q.notify({
+      type: 'warning',
+      message: offlineActionHint,
+    })
+    return
+  }
+
   if (!editForm.value.id) {
     return
   }
@@ -1164,6 +1211,14 @@ const saveEditEntry = async () => {
 }
 
 const deleteEntry = async (entry) => {
+  if (isOffline.value) {
+    $q.notify({
+      type: 'warning',
+      message: offlineActionHint,
+    })
+    return
+  }
+
   const isConfirmed = window.confirm(`Soll Eintrag #${entry.id} wirklich geloescht werden?`)
   if (!isConfirmed) {
     return
@@ -1185,6 +1240,14 @@ const deleteEntry = async (entry) => {
 }
 
 const saveDataset = async () => {
+  if (isOffline.value) {
+    $q.notify({
+      type: 'warning',
+      message: offlineActionHint,
+    })
+    return
+  }
+
   const moodPayload = buildMoodPayload()
   if (!isMoodPayloadValid(moodPayload)) {
     $q.notify({
@@ -1274,10 +1337,15 @@ const saveDataset = async () => {
 }
 
 onMounted(async () => {
+  window.addEventListener('offline', handleOffline)
+  window.addEventListener('online', handleOnline)
+
   await loadData()
 })
 
 onUnmounted(() => {
+  window.removeEventListener('offline', handleOffline)
+  window.removeEventListener('online', handleOnline)
   stopCamera()
   stopNoiseMeasurement()
   stopLightSensor()
@@ -1295,6 +1363,12 @@ onUnmounted(() => {
 
 .hero {
   padding: 8px 4px;
+}
+
+.offline-banner {
+  border: 1px solid rgba(255, 193, 7, 0.4);
+  background: linear-gradient(180deg, rgba(255, 248, 225, 0.95), rgba(255, 243, 205, 0.95));
+  color: #6d4c00;
 }
 
 .capture-card,
@@ -1479,6 +1553,10 @@ onUnmounted(() => {
   justify-content: flex-end;
   gap: 8px;
   padding: 12px 20px 16px;
+}
+
+.action-with-tooltip {
+  display: inline-flex;
 }
 
 .dialog-image-wrapper {
