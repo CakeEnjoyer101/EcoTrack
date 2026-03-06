@@ -368,82 +368,108 @@
 
     <q-dialog v-model="editDialogOpen">
       <q-card class="edit-dialog-card">
-        <q-card-section class="row items-center">
-          <div class="text-h6">Eintrag bearbeiten</div>
+        <q-card-section class="edit-dialog-header row items-center no-wrap">
+          <div class="text-h6 text-weight-bold">Eintrag bearbeiten</div>
           <q-space />
           <q-btn flat round dense icon="close" v-close-popup />
         </q-card-section>
         <q-separator />
 
-        <q-card-section class="q-gutter-md">
+        <q-card-section class="edit-dialog-body">
           <q-select
             v-model="editForm.mood"
             :options="moodOptions"
             emit-value
             map-options
             label="Stimmung"
+            dense
             outlined
           />
 
           <div class="row q-col-gutter-md">
-            <div class="col-6">
+            <div class="col-12 col-sm-6">
               <q-input
                 v-model.number="editForm.energy_level"
                 type="number"
                 min="1"
                 max="10"
                 label="Energie (1-10)"
+                dense
                 outlined
               />
             </div>
-            <div class="col-6">
+            <div class="col-12 col-sm-6">
               <q-input
                 v-model.number="editForm.stress_level"
                 type="number"
                 min="1"
                 max="10"
                 label="Stress (1-10)"
+                dense
                 outlined
               />
             </div>
           </div>
 
-          <q-input v-model="editForm.notes" label="Notizen" outlined />
+          <q-input
+            v-model="editForm.notes"
+            type="textarea"
+            autogrow
+            :rows="3"
+            label="Notizen"
+            dense
+            outlined
+          />
 
           <div class="row q-col-gutter-md">
-            <div class="col-6">
+            <div class="col-12 col-sm-6">
               <q-input
                 v-model.number="editForm.noise_level_db"
                 type="number"
                 min="0"
                 label="Lautstaerke (dB)"
+                dense
                 outlined
               />
             </div>
-            <div class="col-6">
+            <div class="col-12 col-sm-6">
               <q-input
                 v-model.number="editForm.light_level_lux"
                 type="number"
                 min="0"
                 label="Licht (lux)"
+                dense
                 outlined
               />
             </div>
           </div>
 
-          <div>
-            <div class="text-caption text-grey-7 q-mb-sm">Foto im Eintrag</div>
+          <div class="edit-photo-block">
+            <div class="row items-center justify-between q-mb-sm">
+              <div class="text-subtitle2 text-weight-medium">Foto im Eintrag</div>
+              <q-chip
+                dense
+                square
+                :color="editForm.camera_image_data_url ? 'positive' : 'grey-6'"
+                text-color="white"
+                :icon="editForm.camera_image_data_url ? 'check_circle' : 'hide_image'"
+              >
+                {{ editForm.camera_image_data_url ? 'Vorhanden' : 'Kein Foto' }}
+              </q-chip>
+            </div>
+
             <img
               v-if="editForm.camera_image_data_url"
               :src="editForm.camera_image_data_url"
               alt="Eintrag Foto"
-              class="edit-image-preview q-mb-sm"
+              class="edit-image-preview q-mb-md"
             />
-            <div v-else class="text-caption text-grey-7 q-mb-sm">Kein Bild gespeichert</div>
+            <div v-else class="edit-image-empty q-mb-md">Kein Bild gespeichert</div>
 
             <div class="row q-col-gutter-sm">
-              <div class="col-6">
+              <div class="col-12 col-sm-6">
                 <q-btn
+                  unelevated
                   color="primary"
                   icon="photo_camera"
                   label="Aktuelles Kamera-Foto"
@@ -452,7 +478,7 @@
                   @click="useCurrentCameraPhotoInEdit"
                 />
               </div>
-              <div class="col-6">
+              <div class="col-12 col-sm-6">
                 <q-btn
                   flat
                   color="negative"
@@ -466,11 +492,17 @@
           </div>
         </q-card-section>
 
-        <q-card-actions align="right">
+        <q-separator />
+        <q-card-actions class="edit-dialog-actions">
           <q-btn flat color="grey-8" label="Abbrechen" v-close-popup />
-          <q-btn color="primary" icon="save" round :loading="editSaving" @click="saveEditEntry">
-            <q-tooltip>Aenderungen speichern</q-tooltip>
-          </q-btn>
+          <q-btn
+            unelevated
+            color="primary"
+            icon="save"
+            label="Aenderungen speichern"
+            :loading="editSaving"
+            @click="saveEditEntry"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -1391,16 +1423,62 @@ onUnmounted(() => {
 }
 
 .edit-dialog-card {
-  width: 100%;
-  max-width: 760px;
+  width: min(92vw, 860px);
+  max-width: 860px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.14);
+}
+
+.edit-dialog-header {
+  padding: 16px 20px 12px;
+  background: linear-gradient(180deg, rgba(38, 166, 154, 0.08), rgba(38, 166, 154, 0));
+}
+
+.edit-dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 20px;
+  max-height: min(72vh, 760px);
+  overflow-y: auto;
+}
+
+.edit-photo-block {
+  border: 1px solid #d9e3e7;
+  border-radius: 12px;
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(247, 250, 252, 0.95));
 }
 
 .edit-image-preview {
   width: 100%;
-  max-height: 220px;
+  min-height: 170px;
+  max-height: 300px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid #d9e3e7;
+  background: #f2f5f7;
+}
+
+.edit-image-empty {
+  min-height: 130px;
+  border: 1px dashed rgba(69, 90, 100, 0.35);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #607d8b;
+  background: #fff;
+  font-size: 14px;
+}
+
+.edit-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px 16px;
 }
 
 .dialog-image-wrapper {
@@ -1421,6 +1499,29 @@ onUnmounted(() => {
 @media (max-width: 768px) {
   .entry-page {
     padding: 8px;
+  }
+
+  .edit-dialog-card {
+    width: 96vw;
+    border-radius: 12px;
+  }
+
+  .edit-dialog-header {
+    padding: 12px 14px 10px;
+  }
+
+  .edit-dialog-body {
+    padding: 12px 14px;
+    max-height: 78vh;
+  }
+
+  .edit-dialog-actions {
+    padding: 10px 14px 14px;
+    flex-wrap: wrap;
+  }
+
+  .edit-dialog-actions .q-btn {
+    flex: 1 1 100%;
   }
 }
 </style>
