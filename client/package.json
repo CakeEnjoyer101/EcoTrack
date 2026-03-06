@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "PWA Project",
+  "productName": "EcoTrack",
   "author": "Sven-Erik <155955786+CakeEnjoyer101@users.noreply.github.com>",
   "type": "module",
   "private": true,

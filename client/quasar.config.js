@@ -79,7 +79,7 @@ export default defineConfig(() => {
       registerType: 'autoUpdate',
       manifest: {
         id: '/',
-        name: 'EcoTrack PWA',
+        name: 'EcoTrack',
         short_name: 'EcoTrack',
         description: 'Umwelt- und Gesundheitsmonitor als installierbare Progressive Web App',
         start_url: '/',
@@ -91,24 +91,10 @@ export default defineConfig(() => {
         lang: 'de',
         icons: [
           {
-            src: 'icons/icon-192x192.png',
-            sizes: '192x192',
+            src: 'icons/EcoTrack-logo.png',
+            sizes: '1024x1024',
             type: 'image/png',
-          },
-          {
-            src: 'icons/icon-256x256.png',
-            sizes: '256x256',
-            type: 'image/png',
-          },
-          {
-            src: 'icons/icon-384x384.png',
-            sizes: '384x384',
-            type: 'image/png',
-          },
-          {
-            src: 'icons/icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
+            purpose: 'any maskable',
           },
         ],
         screenshots: [
