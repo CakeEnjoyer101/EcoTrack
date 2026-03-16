@@ -15,7 +15,7 @@
       <template #avatar>
         <q-icon name="cloud_off" color="warning" />
       </template>
-      Offline-Modus aktiv. Speichern, Loeschen und Synchronisieren sind derzeit deaktiviert.
+      Offline-Modus aktiv. Speichern, Löschen und Synchronisieren sind derzeit deaktiviert.
     </q-banner>
 
     <q-card class="capture-card q-mb-lg">

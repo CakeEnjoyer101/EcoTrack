@@ -15,7 +15,6 @@
     "dev:pwa": "quasar dev -m pwa",
     "build": "quasar build",
     "build:pwa": "quasar build -m pwa",
-    "serve:pwa": "node scripts/serve-pwa.mjs",
     "postinstall": "quasar prepare"
   },
   "dependencies": {

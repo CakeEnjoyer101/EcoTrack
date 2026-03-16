@@ -21,66 +21,9 @@ const ensureMoodSensorColumns = async () => {
 export const getAllMoodEntries = async () => {
   await ensureMoodSensorColumns();
   const { rows } = await query(`
-    SELECT
-      m.id,
-      m.mood,
-      m.energy_level,
-      m.stress_level,
-      m.notes,
-      m.latitude,
-      m.longitude,
-      m.weather_conditions,
-      m.activity,
-      m.timestamp,
-      COALESCE(
-        m.noise_level_db,
-        CASE
-          WHEN (mic.data->>'noise_level_db') ~ '^\\d+(\\.\\d+)?$'
-            THEN ROUND((mic.data->>'noise_level_db')::numeric)::int
-          ELSE NULL
-        END
-      ) AS noise_level_db,
-      COALESCE(
-        m.light_level_lux,
-        CASE
-          WHEN (lgt.data->>'illuminance') ~ '^\\d+(\\.\\d+)?$'
-            THEN ROUND((lgt.data->>'illuminance')::numeric)::int
-          ELSE NULL
-        END
-      ) AS light_level_lux,
-      COALESCE(
-        m.camera_image_data_url,
-        cam.data->>'image_data_url',
-        cam.data->>'camera_image_data_url',
-        cam.data->>'photo_data_url',
-        cam.data->>'image'
-      ) AS camera_image_data_url
-    FROM mood_entries m
-    LEFT JOIN LATERAL (
-      SELECT data
-      FROM sensor_readings
-      WHERE sensor_type = 'camera'
-        AND data->>'mood_entry_id' = m.id::text
-      ORDER BY timestamp DESC
-      LIMIT 1
-    ) cam ON TRUE
-    LEFT JOIN LATERAL (
-      SELECT data
-      FROM sensor_readings
-      WHERE sensor_type = 'microphone'
-        AND data->>'mood_entry_id' = m.id::text
-      ORDER BY timestamp DESC
-      LIMIT 1
-    ) mic ON TRUE
-    LEFT JOIN LATERAL (
-      SELECT data
-      FROM sensor_readings
-      WHERE sensor_type = 'light'
-        AND data->>'mood_entry_id' = m.id::text
-      ORDER BY timestamp DESC
-      LIMIT 1
-    ) lgt ON TRUE
-    ORDER BY m.timestamp DESC
+    SELECT *
+    FROM mood_entries
+    ORDER BY timestamp DESC
   `);
   return rows;
 };
